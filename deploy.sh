@@ -35,13 +35,13 @@ if [[ ! -n "$DEPLOYMENT_SOURCE" ]]; then
   DEPLOYMENT_SOURCE=$SCRIPT_DIR/build
 fi
 
-if [[ ! -n "$NEXT_MANIFEST_PATH" ]]; then
-  NEXT_MANIFEST_PATH=$ARTIFACTS/manifest
+# if [[ ! -n "$NEXT_MANIFEST_PATH" ]]; then
+#   NEXT_MANIFEST_PATH=$ARTIFACTS/manifest
 
-  if [[ ! -n "$PREVIOUS_MANIFEST_PATH" ]]; then
-    PREVIOUS_MANIFEST_PATH=$NEXT_MANIFEST_PATH
-  fi
-fi
+#   if [[ ! -n "$PREVIOUS_MANIFEST_PATH" ]]; then
+#     PREVIOUS_MANIFEST_PATH=$NEXT_MANIFEST_PATH
+#   fi
+# fi
 
 if [[ ! -n "$DEPLOYMENT_TARGET" ]]; then
   DEPLOYMENT_TARGET=$ARTIFACTS/wwwroot
@@ -49,50 +49,50 @@ else
   KUDU_SERVICE=true
 fi
 
-if [[ ! -n "$KUDU_SYNC_CMD" ]]; then
-  # Install kudu sync
-  echo Installing Kudu Sync
-  npm install kudusync -g --silent
-  exitWithMessageOnError "npm failed"
+# if [[ ! -n "$KUDU_SYNC_CMD" ]]; then
+#   # Install kudu sync
+#   echo Installing Kudu Sync
+#   npm install kudusync -g --silent
+#   exitWithMessageOnError "npm failed"
 
-  if [[ ! -n "$KUDU_SERVICE" ]]; then
-    # In case we are running locally this is the correct location of kuduSync
-    KUDU_SYNC_CMD=kuduSync
-  else
-    # In case we are running on kudu service this is the correct location of kuduSync
-    KUDU_SYNC_CMD=$APPDATA/npm/node_modules/kuduSync/bin/kuduSync
-  fi
-fi
+#   if [[ ! -n "$KUDU_SERVICE" ]]; then
+#     # In case we are running locally this is the correct location of kuduSync
+#     KUDU_SYNC_CMD=kuduSync
+#   else
+#     # In case we are running on kudu service this is the correct location of kuduSync
+#     KUDU_SYNC_CMD=$APPDATA/npm/node_modules/kuduSync/bin/kuduSync
+#   fi
+# fi
 
 # Node Helpers
 # ------------
 
-selectNodeVersion () {
-  if [[ -n "$KUDU_SELECT_NODE_VERSION_CMD" ]]; then
-    SELECT_NODE_VERSION="$KUDU_SELECT_NODE_VERSION_CMD \"$DEPLOYMENT_SOURCE\" \"$DEPLOYMENT_TARGET\" \"$DEPLOYMENT_TEMP\""
-    eval $SELECT_NODE_VERSION
-    exitWithMessageOnError "select node version failed"
+# selectNodeVersion () {
+#   if [[ -n "$KUDU_SELECT_NODE_VERSION_CMD" ]]; then
+#     SELECT_NODE_VERSION="$KUDU_SELECT_NODE_VERSION_CMD \"$DEPLOYMENT_SOURCE\" \"$DEPLOYMENT_TARGET\" \"$DEPLOYMENT_TEMP\""
+#     eval $SELECT_NODE_VERSION
+#     exitWithMessageOnError "select node version failed"
 
-    if [[ -e "$DEPLOYMENT_TEMP/__nodeVersion.tmp" ]]; then
-      NODE_EXE=`cat "$DEPLOYMENT_TEMP/__nodeVersion.tmp"`
-      exitWithMessageOnError "getting node version failed"
-    fi
+#     if [[ -e "$DEPLOYMENT_TEMP/__nodeVersion.tmp" ]]; then
+#       NODE_EXE=`cat "$DEPLOYMENT_TEMP/__nodeVersion.tmp"`
+#       exitWithMessageOnError "getting node version failed"
+#     fi
     
-    if [[ -e "$DEPLOYMENT_TEMP/__npmVersion.tmp" ]]; then
-      NPM_JS_PATH=`cat "$DEPLOYMENT_TEMP/__npmVersion.tmp"`
-      exitWithMessageOnError "getting npm version failed"
-    fi
+#     if [[ -e "$DEPLOYMENT_TEMP/__npmVersion.tmp" ]]; then
+#       NPM_JS_PATH=`cat "$DEPLOYMENT_TEMP/__npmVersion.tmp"`
+#       exitWithMessageOnError "getting npm version failed"
+#     fi
 
-    if [[ ! -n "$NODE_EXE" ]]; then
-      NODE_EXE=node
-    fi
+#     if [[ ! -n "$NODE_EXE" ]]; then
+#       NODE_EXE=node
+#     fi
 
-    NPM_CMD="\"$NODE_EXE\" \"$NPM_JS_PATH\""
-  else
-    NPM_CMD=npm
-    NODE_EXE=node
-  fi
-}
+#     NPM_CMD="\"$NODE_EXE\" \"$NPM_JS_PATH\""
+#   else
+#     NPM_CMD=npm
+#     NODE_EXE=node
+#   fi
+# }
 
 ##################################################################################################################################
 # Deployment
@@ -100,12 +100,12 @@ selectNodeVersion () {
 
 echo Handling node.js deployment.
 # 1. Select node version
-selectNodeVersion
+# selectNodeVersion
 
 # 2. Install npm packages
 if [ -e "$DEPLOYMENT_SOURCE/package.json" ]; then
   cd "$DEPLOYMENT_SOURCE"
-  eval $NPM_CMD install
+  eval npm install
   exitWithMessageOnError "npm failed"
   cd - > /dev/null
 fi
